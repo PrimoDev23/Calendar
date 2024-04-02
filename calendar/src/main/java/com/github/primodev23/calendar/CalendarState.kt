@@ -10,11 +10,15 @@ import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.github.primodev23.calendar.models.Month
+import com.github.primodev23.calendar.models.Selection
 import java.time.LocalDate
 
 @Suppress("unused")
 @Stable
-class CalendarState(initialMonth: Month) {
+class CalendarState(
+    initialMonth: Month,
+    initialSelection: Selection = Selection()
+) {
     internal val pagerState = CalendarPagerState()
 
     var settledMonth by mutableStateOf(initialMonth)
@@ -25,6 +29,8 @@ class CalendarState(initialMonth: Month) {
 
         settledMonth.plusMonths(offset)
     }
+
+    val selection = initialSelection
 
     internal val months by derivedStateOf {
         (-1L..1L step 1L).map { offset ->
@@ -50,10 +56,16 @@ class CalendarState(initialMonth: Month) {
 
         internal val Saver: Saver<CalendarState, *> = listSaver(
             save = {
-                listOf(it.settledMonth)
+                listOf(
+                    it.settledMonth,
+                    it.selection
+                )
             },
             restore = {
-                CalendarState(initialMonth = it[0])
+                CalendarState(
+                    initialMonth = it[0] as Month,
+                    initialSelection = it[1] as Selection
+                )
             }
         )
     }

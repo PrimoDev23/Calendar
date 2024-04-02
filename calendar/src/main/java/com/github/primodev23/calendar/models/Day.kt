@@ -6,7 +6,8 @@ import java.time.LocalDate
 @Immutable
 data class Day(
     val date: LocalDate,
-    val month: Month? = null
+    val month: Month? = null,
+    val isSelected: Boolean = false
 ) : Comparable<Day> {
 
     val isInSelectedMonth: Boolean

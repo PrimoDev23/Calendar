@@ -46,7 +46,19 @@ fun Calendar(
             derivedStateOf {
                 val datesForMonth = state.months[page]
 
-                datesForMonth.days.chunked(CalendarState.WEEK_LENGTH)
+                datesForMonth.days
+                    .map { day ->
+                        val isSelected = state.selection.selectedDays.any {
+                            day.compareTo(it) == 0
+                        }
+
+                        if (isSelected) {
+                            day.copy(isSelected = isSelected)
+                        } else {
+                            day
+                        }
+                    }
+                    .chunked(CalendarState.WEEK_LENGTH)
             }
         }
 

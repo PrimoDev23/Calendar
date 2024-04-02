@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CalendarShowcase</string>
+    <string name="single_selection">Single selection</string>
+    <string name="range_selection">Range selection</string>
 </resources>
