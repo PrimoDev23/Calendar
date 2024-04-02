@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import com.primodev.calendar.models.Month
 import java.time.LocalDate
 
-@Suppress("MemberVisibilityCanBePrivate", "unused")
+@Suppress("unused")
 @Stable
 class CalendarState(initialMonth: Month) {
     internal val pagerState = CalendarPagerState()

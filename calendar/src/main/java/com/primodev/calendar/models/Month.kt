@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 import com.primodev.calendar.CalendarState
 import java.time.LocalDate
 
-@Suppress("MemberVisibilityCanBePrivate")
 @Immutable
 data class Month(private val date: LocalDate) {
     val startDate: LocalDate = date.withDayOfMonth(1)
