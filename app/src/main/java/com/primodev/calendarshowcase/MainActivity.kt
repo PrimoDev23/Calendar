@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.primodev.calendar.Calendar
@@ -86,17 +87,22 @@ fun CalendarContent(
                 )
             }
 
-            val monthString = state.currentMonth.startDate.month.getDisplayName(
+            val monthString = state.targetMonth.startDate.month.getDisplayName(
                 TextStyle.FULL,
                 Locale.getDefault()
             )
-            val fullText = "$monthString ${state.currentMonth.startDate.year}"
+            val fullText = "$monthString ${state.targetMonth.startDate.year}"
 
             Crossfade(
+                modifier = Modifier.weight(1f),
                 targetState = fullText,
                 label = "MonthLabel"
             ) { text ->
-                Text(text = text)
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = text,
+                    textAlign = TextAlign.Center
+                )
             }
 
             IconButton(

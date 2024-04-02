@@ -34,7 +34,7 @@ fun Calendar(
         if(!state.pagerState.isScrollInProgress) {
             val offset = state.pagerState.settledPage - 1L
 
-            state.scrollToMonth(state.currentMonth.plusMonths(offset))
+            state.scrollToMonth(state.settledMonth.plusMonths(offset))
         }
     }
 

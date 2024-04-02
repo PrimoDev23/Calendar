@@ -16,18 +16,25 @@ import java.time.LocalDate
 @Stable
 class CalendarState(initialMonth: Month) {
     internal val pagerState = CalendarPagerState()
-    var currentMonth by mutableStateOf(initialMonth)
+
+    var settledMonth by mutableStateOf(initialMonth)
         private set
+
+    val targetMonth by derivedStateOf {
+        val offset = pagerState.targetPage - 2L
+
+        settledMonth.plusMonths(offset)
+    }
 
     internal val months by derivedStateOf {
         (-1L..1L step 1L).map { offset ->
-            currentMonth.plusMonths(offset)
+            settledMonth.plusMonths(offset)
         }
     }
 
     suspend fun scrollToMonth(month: Month) {
         pagerState.scrollToPage(1)
-        currentMonth = month
+        settledMonth = month
     }
 
     suspend fun animateScrollToNextMonth() {
@@ -43,7 +50,7 @@ class CalendarState(initialMonth: Month) {
 
         internal val Saver: Saver<CalendarState, *> = listSaver(
             save = {
-                listOf(it.currentMonth.startDate)
+                listOf(it.settledMonth.startDate)
             },
             restore = {
                 CalendarState(initialMonth = Month(it[0]))
