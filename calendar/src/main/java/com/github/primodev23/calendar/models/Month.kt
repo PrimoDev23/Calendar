@@ -1,7 +1,7 @@
-package com.primodev.calendar.models
+package com.github.primodev23.calendar.models
 
 import androidx.compose.runtime.Immutable
-import com.primodev.calendar.CalendarState
+import com.github.primodev23.calendar.CalendarState
 import java.time.LocalDate
 
 @Immutable

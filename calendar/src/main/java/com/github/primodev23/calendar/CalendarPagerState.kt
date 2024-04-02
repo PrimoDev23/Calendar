@@ -1,4 +1,4 @@
-package com.primodev.calendar
+package com.github.primodev23.calendar
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.pager.PagerState

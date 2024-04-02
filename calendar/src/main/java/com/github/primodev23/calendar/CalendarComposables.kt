@@ -1,4 +1,4 @@
-package com.primodev.calendar
+package com.github.primodev23.calendar
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.primodev.calendar.models.Day
+import com.github.primodev23.calendar.models.Day
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

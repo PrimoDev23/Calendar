@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.primodev.calendarshowcase"
+    namespace = "com.github.primodev23.calendarshowcase"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.primodev.calendarshowcase"
+        applicationId = "com.github.primodev23.calendarshowcase"
         minSdk = 29
         targetSdk = 34
         versionCode = 1

@@ -1,4 +1,4 @@
-package com.primodev.calendarshowcase.ui.theme
+package com.github.primodev23.calendarshowcase.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

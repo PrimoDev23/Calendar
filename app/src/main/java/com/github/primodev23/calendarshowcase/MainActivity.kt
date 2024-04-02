@@ -1,4 +1,4 @@
-package com.primodev.calendarshowcase
+package com.github.primodev23.calendarshowcase
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -30,10 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.primodev.calendar.Calendar
-import com.primodev.calendar.models.Day
-import com.primodev.calendar.rememberCalendarState
-import com.primodev.calendarshowcase.ui.theme.CalendarShowcaseTheme
+import com.github.primodev23.calendar.Calendar
+import com.github.primodev23.calendar.models.Day
+import com.github.primodev23.calendar.rememberCalendarState
+import com.github.primodev23.calendarshowcase.ui.theme.CalendarShowcaseTheme
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
 import java.time.format.TextStyle

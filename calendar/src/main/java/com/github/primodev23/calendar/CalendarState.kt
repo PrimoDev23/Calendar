@@ -1,4 +1,4 @@
-package com.primodev.calendar
+package com.github.primodev23.calendar
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -9,7 +9,7 @@ import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.primodev.calendar.models.Month
+import com.github.primodev23.calendar.models.Month
 import java.time.LocalDate
 
 @Suppress("unused")

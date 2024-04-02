@@ -1,4 +1,4 @@
-package com.primodev.calendarshowcase.ui.theme
+package com.github.primodev23.calendarshowcase.ui.theme
 
 import android.app.Activity
 import android.os.Build

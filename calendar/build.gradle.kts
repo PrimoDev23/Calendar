@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.github.PrimoDev23"
+    namespace = "com.github.primodev23.calendar"
     compileSdk = 34
 
     defaultConfig {
@@ -52,7 +52,7 @@ android {
 publishing {
     publications {
         register<MavenPublication>("release") {
-            groupId = "com.primodev"
+            groupId = "com.github.primodev23"
             artifactId = "calendar"
             version = "1.0"
 
