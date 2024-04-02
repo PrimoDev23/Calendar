@@ -50,10 +50,10 @@ class CalendarState(initialMonth: Month) {
 
         internal val Saver: Saver<CalendarState, *> = listSaver(
             save = {
-                listOf(it.settledMonth.startDate)
+                listOf(it.settledMonth)
             },
             restore = {
-                CalendarState(initialMonth = Month(it[0]))
+                CalendarState(initialMonth = it[0])
             }
         )
     }

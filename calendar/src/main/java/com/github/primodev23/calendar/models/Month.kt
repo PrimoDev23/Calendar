@@ -2,10 +2,11 @@ package com.github.primodev23.calendar.models
 
 import androidx.compose.runtime.Immutable
 import com.github.primodev23.calendar.CalendarState
+import java.io.Serializable
 import java.time.LocalDate
 
 @Immutable
-data class Month(private val date: LocalDate) {
+data class Month(private val date: LocalDate) : Serializable {
     val startDate: LocalDate = date.withDayOfMonth(1)
 
     val days = startDate.getAllDays()
