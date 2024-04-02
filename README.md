@@ -1,4 +1,6 @@
 ## Calendar
+[![](https://jitpack.io/v/PrimoDev23/Calendar.svg)](https://jitpack.io/#PrimoDev23/Calendar)
+
 Calendar is a fully customizable calendar written in Jetpack Compose. This library offers a comprehensive and customizable solution for integrating calendars into your Jetpack Compose applications. Built upon the powerful Compose slot APIs and utilizing a pager-based architecture, this library provides developers with the flexibility to create stunning and functional calendar components tailored to their specific needs.
 
 ## Getting Started
