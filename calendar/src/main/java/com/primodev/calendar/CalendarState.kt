@@ -12,11 +12,10 @@ import androidx.compose.runtime.setValue
 import com.primodev.calendar.models.Month
 import java.time.LocalDate
 
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 @Stable
 class CalendarState(initialMonth: Month) {
     internal val pagerState = CalendarPagerState()
-
-    @Suppress("MemberVisibilityCanBePrivate")
     var currentMonth by mutableStateOf(initialMonth)
         private set
 
@@ -29,6 +28,14 @@ class CalendarState(initialMonth: Month) {
     suspend fun scrollToMonth(month: Month) {
         pagerState.scrollToPage(1)
         currentMonth = month
+    }
+
+    suspend fun animateScrollToNextMonth() {
+        pagerState.animateScrollToPage(2)
+    }
+
+    suspend fun animateScrollToPreviousMonth() {
+        pagerState.animateScrollToPage(0)
     }
 
     companion object {
