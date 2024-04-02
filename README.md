@@ -12,7 +12,7 @@ repositories {
 
 // module-level build.gradle
 dependencies {
-  implementation 'com.github.PrimoDev23:Calendar:Tag'
+  implementation 'com.github.PrimoDev23:Calendar:<latest-version>'
 }
 ```
 
