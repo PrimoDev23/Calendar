@@ -9,54 +9,29 @@ import java.time.LocalDate
 data class Month(private val date: LocalDate) : Serializable {
     val startDate: LocalDate = date.withDayOfMonth(1)
 
-    val days = startDate.getAllDays()
+    val days = getAllDays()
 
-    private fun LocalDate.getAllDays(): List<Day> {
+    private fun getAllDays(): List<Day> {
         val startDayOfWeek = startDate.dayOfWeek
-        val days = mutableListOf<Day>()
 
-        val additionalStartDays = 1L - startDayOfWeek.value
-        for (day in additionalStartDays until 0L) {
-            val date = startDate.plusDays(day)
+        val rangeStartDate = startDate.plusDays(1L - startDayOfWeek.value)
 
-            days.add(
-                Day(
-                    date = date,
-                    isInSelectedMonth = false
-                )
-            )
-        }
+        val monthLength = startDate.lengthOfMonth()
+        val endOfMonth = startDate.withDayOfMonth(monthLength)
+        val leftDaysUntilSunday = CalendarState.WEEK_LENGTH - endOfMonth.dayOfWeek.value
+        val rangeEndDate = endOfMonth.plusDays(leftDaysUntilSunday.toLong())
 
-        val monthLength = this.lengthOfMonth()
+        val start = Day(
+            date = rangeStartDate,
+            month = this@Month
+        )
+        val end = Day(
+            date = rangeEndDate,
+            month = this@Month
+        )
+        val range = start..end
 
-        for (day in 1..monthLength) {
-            val date = this.withDayOfMonth(day)
-
-            days.add(
-                Day(
-                    date = date,
-                    isInSelectedMonth = true
-                )
-            )
-        }
-
-        val leftDays = CalendarState.WEEK_LENGTH - (days.size % CalendarState.WEEK_LENGTH)
-
-        // This is seven when there are no days left at the end
-        if (leftDays < CalendarState.WEEK_LENGTH) {
-            val lastDay = days.last()
-
-            repeat(leftDays) { daysToAdd ->
-                days.add(
-                    Day(
-                        date = lastDay.date.plusDays(daysToAdd + 1L),
-                        isInSelectedMonth = false
-                    )
-                )
-            }
-        }
-
-        return days
+        return range.toList()
     }
 
     fun plusMonths(monthsToAdd: Long): Month {
