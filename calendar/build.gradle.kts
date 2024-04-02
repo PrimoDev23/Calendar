@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.primodev.calendar"
+    namespace = "com.github.PrimoDev23"
     compileSdk = 34
 
     defaultConfig {
