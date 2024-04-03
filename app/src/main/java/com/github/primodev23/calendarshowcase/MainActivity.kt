@@ -44,11 +44,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.primodev23.calendar.Calendar
 import com.github.primodev23.calendar.models.Day
+import com.github.primodev23.calendar.models.Month
 import com.github.primodev23.calendar.rememberCalendarState
 import com.github.primodev23.calendarshowcase.ui.theme.CalendarShowcaseTheme
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.format.TextStyle
+import java.util.Collections
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
@@ -78,7 +81,12 @@ fun CalendarContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        val state = rememberCalendarState()
+        val state = rememberCalendarState(
+            initialMonth = Month(
+                date = LocalDate.now(),
+                startOfWeek = DayOfWeek.SUNDAY
+            )
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -150,7 +158,14 @@ fun CalendarContent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    DayOfWeek.entries.forEach {
+                    val entries = remember {
+                        val dayOfWeekEntries = DayOfWeek.entries.toMutableList()
+                        Collections.rotate(dayOfWeekEntries, 1)
+
+                        dayOfWeekEntries
+                    }
+
+                    entries.forEach {
                         Box(
                             modifier = Modifier.weight(1f),
                             contentAlignment = Alignment.Center
