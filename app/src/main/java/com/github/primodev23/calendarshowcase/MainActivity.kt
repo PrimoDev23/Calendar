@@ -9,6 +9,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +26,7 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -44,12 +47,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.primodev23.calendar.Calendar
 import com.github.primodev23.calendar.models.Day
-import com.github.primodev23.calendar.models.Month
 import com.github.primodev23.calendar.rememberCalendarState
 import com.github.primodev23.calendarshowcase.ui.theme.CalendarShowcaseTheme
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
-import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Collections
 import java.util.Locale
@@ -76,17 +77,13 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CalendarContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        val state = rememberCalendarState(
-            initialMonth = Month(
-                date = LocalDate.now(),
-                startOfWeek = DayOfWeek.SUNDAY
-            )
-        )
+        val state = rememberCalendarState()
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -158,9 +155,11 @@ fun CalendarContent(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    val entries = remember {
+                    val entries = remember(state.startOfWeek) {
                         val dayOfWeekEntries = DayOfWeek.entries.toMutableList()
-                        Collections.rotate(dayOfWeekEntries, 1)
+                        val distance = -state.startOfWeek.ordinal
+
+                        Collections.rotate(dayOfWeekEntries, distance)
 
                         dayOfWeekEntries
                     }
@@ -229,6 +228,25 @@ fun CalendarContent(
                     startDay = null
                 }
             )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally)
+        ) {
+            DayOfWeek.entries.forEach {
+                FilterChip(
+                    selected = state.startOfWeek == it,
+                    onClick = {
+                        state.updateStartOfWeek(it)
+                    },
+                    label = {
+                        Text(text = it.getDisplayName(TextStyle.SHORT, Locale.getDefault()))
+                    }
+                )
+            }
         }
     }
 }

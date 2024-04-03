@@ -11,17 +11,22 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.github.primodev23.calendar.models.Month
 import com.github.primodev23.calendar.models.Selection
+import java.time.DayOfWeek
 import java.time.LocalDate
 
 @Suppress("unused")
 @Stable
 class CalendarState(
     initialMonth: Month,
-    initialSelection: Selection = Selection()
+    initialSelection: Selection,
+    initialStartOfWeek: DayOfWeek
 ) {
     internal val pagerState = CalendarPagerState()
 
-    var settledMonth by mutableStateOf(initialMonth)
+    var startOfWeek by mutableStateOf(initialStartOfWeek)
+        private set
+
+    var settledMonth by mutableStateOf(initialMonth.copy(startOfWeek = startOfWeek))
         private set
 
     val targetMonth by derivedStateOf {
@@ -40,7 +45,7 @@ class CalendarState(
 
     suspend fun scrollToMonth(month: Month) {
         pagerState.scrollToPage(1)
-        settledMonth = month
+        settledMonth = month.copy(startOfWeek = startOfWeek)
     }
 
     suspend fun animateScrollToNextMonth() {
@@ -51,6 +56,11 @@ class CalendarState(
         pagerState.animateScrollToPage(0)
     }
 
+    fun updateStartOfWeek(dayOfWeek: DayOfWeek) {
+        startOfWeek = dayOfWeek
+        settledMonth = settledMonth.copy(startOfWeek = dayOfWeek)
+    }
+
     companion object {
         internal const val WEEK_LENGTH = 7
 
@@ -58,13 +68,15 @@ class CalendarState(
             save = {
                 listOf(
                     it.settledMonth,
-                    it.selection
+                    it.selection,
+                    it.startOfWeek
                 )
             },
             restore = {
                 CalendarState(
                     initialMonth = it[0] as Month,
-                    initialSelection = it[1] as Selection
+                    initialSelection = it[1] as Selection,
+                    initialStartOfWeek = it[2] as DayOfWeek
                 )
             }
         )
@@ -75,12 +87,14 @@ class CalendarState(
 @Composable
 fun rememberCalendarState(
     initialMonth: Month = Month(date = LocalDate.now()),
-    initialSelection: Selection = Selection()
+    initialSelection: Selection = Selection(),
+    startOfWeek: DayOfWeek = DayOfWeek.MONDAY
 ): CalendarState {
     return rememberSaveable(saver = CalendarState.Saver) {
         CalendarState(
             initialMonth = initialMonth,
-            initialSelection = initialSelection
+            initialSelection = initialSelection,
+            initialStartOfWeek = startOfWeek
         )
     }
 }

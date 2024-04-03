@@ -31,7 +31,7 @@ fun Calendar(
     dayContent: @Composable RowScope.(Day) -> Unit
 ) {
     LaunchedEffect(state.pagerState.settledPage, state.pagerState.isScrollInProgress) {
-        if(!state.pagerState.isScrollInProgress) {
+        if (!state.pagerState.isScrollInProgress) {
             val offset = state.pagerState.settledPage - 1L
 
             state.scrollToMonth(state.settledMonth.plusMonths(offset))

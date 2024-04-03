@@ -7,10 +7,15 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 
 @Immutable
-data class Month(
+data class Month internal constructor(
     private val date: LocalDate,
-    private val startOfWeek: DayOfWeek = DayOfWeek.MONDAY
+    private val startOfWeek: DayOfWeek
 ) : Serializable {
+
+    constructor(date: LocalDate) : this(
+        date = date,
+        startOfWeek = DayOfWeek.MONDAY
+    )
 
     val startDate: LocalDate = date.withDayOfMonth(1)
 
