@@ -25,7 +25,7 @@ class CalendarState(
         private set
 
     val targetMonth by derivedStateOf {
-        val offset = pagerState.targetPage - 2L
+        val offset = pagerState.targetPage - 1L
 
         settledMonth.plusMonths(offset)
     }
