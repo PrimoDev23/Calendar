@@ -73,8 +73,14 @@ class CalendarState(
 }
 
 @Composable
-fun rememberCalendarState(initialMonth: Month = Month(date = LocalDate.now())): CalendarState {
+fun rememberCalendarState(
+    initialMonth: Month = Month(date = LocalDate.now()),
+    initialSelection: Selection = Selection()
+): CalendarState {
     return rememberSaveable(saver = CalendarState.Saver) {
-        CalendarState(initialMonth = initialMonth)
+        CalendarState(
+            initialMonth = initialMonth,
+            initialSelection = initialSelection
+        )
     }
 }
