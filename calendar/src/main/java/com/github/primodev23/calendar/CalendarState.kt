@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.listSaver
@@ -21,8 +20,8 @@ class CalendarState(
     initialMonth: Month,
     initialSelection: Selection,
     initialStartOfWeek: DayOfWeek,
-    private val initialMinMonth: Month = initialMonth.plusMonths(-DEFAULT_MONTH_LIMIT),
-    private val initialMaxMonth: Month = initialMonth.plusMonths(DEFAULT_MONTH_LIMIT)
+    initialMinMonth: Month = initialMonth.plusMonths(-DEFAULT_MONTH_LIMIT),
+    initialMaxMonth: Month = initialMonth.plusMonths(DEFAULT_MONTH_LIMIT)
 ) {
     init {
         assert(initialMinMonth.startDate <= initialMaxMonth.startDate) {
@@ -36,30 +35,36 @@ class CalendarState(
         }
     }
 
-    internal val initialPage by mutableIntStateOf(getPageForMonth(initialMonth))
+    var minMonth by mutableStateOf(initialMinMonth)
+        private set
 
-    internal var pagerState = CalendarPagerState(
-        initialPageCount = initialMinMonth.getMonthsBetween(initialMaxMonth),
-        initialCurrentPage = initialPage
+    var maxMonth by mutableStateOf(initialMaxMonth)
+        private set
+
+    private val pageCount by derivedStateOf {
+        minMonth.getMonthsBetween(maxMonth, endInclusive = true)
+    }
+
+    internal val pagerState = CalendarPagerState(
+        updatedPageCount = {
+            pageCount
+        },
+        initialCurrentPage = getPageForMonth(initialMonth)
     )
 
     var startOfWeek by mutableStateOf(initialStartOfWeek)
         private set
 
-    internal val initialMonthWithDayOfWeek by derivedStateOf {
-        initialMonth.copy(startOfWeek = startOfWeek)
+    internal val minMonthWithDayOfWeek by derivedStateOf {
+        minMonth.copy(startOfWeek = startOfWeek)
     }
 
     val settledMonth by derivedStateOf {
-        val offsetFromInitialPage = pagerState.settledPage - initialPage
-
-        initialMonthWithDayOfWeek.plusMonths(offsetFromInitialPage.toLong())
+        minMonthWithDayOfWeek.plusMonths(pagerState.settledPage.toLong())
     }
 
     val targetMonth by derivedStateOf {
-        val offsetFromInitialPage = pagerState.targetPage - initialPage
-
-        initialMonthWithDayOfWeek.plusMonths(offsetFromInitialPage.toLong())
+        minMonthWithDayOfWeek.plusMonths(pagerState.targetPage.toLong())
     }
 
     val selection = initialSelection
@@ -94,17 +99,52 @@ class CalendarState(
         startOfWeek = dayOfWeek
     }
 
-    private fun Month.validateBounds() {
-        assert(this.startDate >= initialMinMonth.startDate) {
+    suspend fun updateMinMonth(month: Month) {
+        assert(month.startDate <= maxMonth.startDate) {
+            "month cannot be after the set maximum month"
+        }
+
+        val newCurrentPage = if (settledMonth.startDate < month.startDate) {
+            0
+        } else {
+            getPageForMonth(
+                month = settledMonth,
+                minMonth = month
+            )
+        }
+
+        minMonth = month
+        pagerState.scrollToPage(newCurrentPage)
+    }
+
+    suspend fun updateMaxMonth(month: Month) {
+        assert(month.startDate >= minMonth.startDate) {
             "month cannot be before the set minimum month"
         }
-        assert(this.startDate <= initialMaxMonth.startDate) {
+
+        maxMonth = month
+
+        if (settledMonth.startDate > month.startDate) {
+            val newPageCount = getPageForMonth(month)
+
+            pagerState.scrollToPage(newPageCount)
+        }
+    }
+
+    private fun Month.validateBounds() {
+        assert(this.startDate >= minMonth.startDate) {
+            "month cannot be before the set minimum month"
+        }
+        assert(this.startDate <= maxMonth.startDate) {
             "month cannot be after the set maximum month"
         }
     }
 
-    private fun getPageForMonth(month: Month): Int {
-        return initialMinMonth.getMonthsBetween(month)
+    private fun getPageForMonth(
+        month: Month,
+        minMonth: Month = this.minMonth
+    ): Int {
+        return minMonth.getMonthsBetween(month)
     }
 
     companion object {

@@ -2,4 +2,8 @@
     <string name="app_name">CalendarShowcase</string>
     <string name="single_selection">Single selection</string>
     <string name="range_selection">Range selection</string>
+    <string name="min_month_minus_one">minMonth - 1</string>
+    <string name="max_month_plus_one">maxMonth + 1</string>
+    <string name="max_month_minus_one">maxMonth - 1</string>
+    <string name="min_month_plus_one">minMonth + 1</string>
 </resources>

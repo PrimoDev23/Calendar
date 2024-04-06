@@ -24,6 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
@@ -47,10 +48,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.primodev23.calendar.Calendar
 import com.github.primodev23.calendar.models.Day
+import com.github.primodev23.calendar.models.Month
 import com.github.primodev23.calendar.rememberCalendarState
 import com.github.primodev23.calendarshowcase.ui.theme.CalendarShowcaseTheme
 import kotlinx.coroutines.launch
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Collections
 import java.util.Locale
@@ -83,21 +86,24 @@ fun CalendarContent(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier) {
-        val state = rememberCalendarState()
+        val scope = rememberCoroutineScope()
+        val state = rememberCalendarState(
+            initialMinMonth = Month(date = LocalDate.now().minusMonths(1)),
+            initialMaxMonth = Month(date = LocalDate.now().plusMonths(1))
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val scope = rememberCoroutineScope()
-
             IconButton(
                 onClick = {
                     scope.launch {
                         state.animateScrollToPreviousMonth()
                     }
-                }
+                },
+                enabled = state.settledMonth.startDate > state.minMonth.startDate
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.KeyboardArrowLeft,
@@ -128,7 +134,8 @@ fun CalendarContent(
                     scope.launch {
                         state.animateScrollToNextMonth()
                     }
-                }
+                },
+                enabled = state.settledMonth.startDate < state.maxMonth.startDate
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.KeyboardArrowRight,
@@ -246,6 +253,67 @@ fun CalendarContent(
                         Text(text = it.getDisplayName(TextStyle.SHORT, Locale.getDefault()))
                     }
                 )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        scope.launch {
+                            state.updateMinMonth(state.minMonth.plusMonths(-1))
+                        }
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.min_month_minus_one))
+                }
+
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        scope.launch {
+                            state.updateMaxMonth(state.maxMonth.plusMonths(-1))
+                        }
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.max_month_minus_one))
+                }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        scope.launch {
+                            state.updateMinMonth(state.minMonth.plusMonths(1))
+                        }
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.min_month_plus_one))
+                }
+
+                Button(
+                    modifier = Modifier.weight(1f),
+                    onClick = {
+                        scope.launch {
+                            state.updateMaxMonth(state.maxMonth.plusMonths(1))
+                        }
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.max_month_plus_one))
+                }
             }
         }
     }

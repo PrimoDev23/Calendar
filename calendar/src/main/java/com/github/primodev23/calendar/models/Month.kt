@@ -58,7 +58,16 @@ data class Month internal constructor(
         }
     }
 
-    fun getMonthsBetween(end: Month): Int {
-        return ChronoUnit.MONTHS.between(this.startDate, end.startDate).toInt()
+    fun getMonthsBetween(
+        end: Month,
+        endInclusive: Boolean = false
+    ): Int {
+        val duration = ChronoUnit.MONTHS.between(this.startDate, end.startDate).toInt()
+
+        return if (endInclusive) {
+            duration + 1
+        } else {
+            duration
+        }
     }
 }
