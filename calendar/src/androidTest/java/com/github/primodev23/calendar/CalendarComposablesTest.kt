@@ -110,7 +110,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val newMonth = Month(date = LocalDate.of(2025, 12, 1))
+        val newMonth = Month(date = LocalDate.of(2024, 12, 1))
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -469,6 +469,164 @@ class CalendarComposablesTest : BaseCalendarTest() {
         assertEquals(selection, state.selection)
         assertEquals(minMonth, state.minMonth)
         assertEquals(maxMonth, state.maxMonth)
+    }
+
+    @Test
+    fun minMaxMonthApplied() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+        val minMonth = startMonth.plusMonths(-3)
+        val maxMonth = startMonth.plusMonths(5)
+
+        createCalendar(
+            modifier = Modifier.fillMaxWidth(),
+            initialMonth = startMonth,
+            startOfWeek = startDayOfWeek,
+            initialMinMonth = minMonth,
+            initialMaxMonth = maxMonth
+        )
+
+        assertEquals(9, state.pagerState.pageCount)
+        assertEquals(3, state.pagerState.settledPage)
+        assertEquals(minMonth, state.minMonth)
+        assertEquals(maxMonth, state.maxMonth)
+    }
+
+    @Test
+    fun updateMinMonth_selectedMonthBeforeMinMonth() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+        val minMonth = startMonth.plusMonths(-3)
+        val maxMonth = startMonth.plusMonths(5)
+
+        createCalendar(
+            modifier = Modifier.fillMaxWidth(),
+            initialMonth = startMonth,
+            startOfWeek = startDayOfWeek,
+            initialMinMonth = minMonth,
+            initialMaxMonth = maxMonth
+        )
+
+        rule.runOnUiThread {
+            scope.launch {
+                state.scrollToMonth(minMonth)
+            }
+        }
+        rule.waitUntil { state.settledMonth == minMonth }
+
+        val newMinMonth = minMonth.plusMonths(1)
+        rule.runOnUiThread {
+            scope.launch {
+                state.updateMinMonth(newMinMonth)
+            }
+        }
+        rule.waitForIdle()
+
+        assertEquals(newMinMonth, state.minMonth)
+        assertEquals(newMinMonth, state.settledMonth)
+    }
+
+    @Test
+    fun updateMinMonth_selectedMonthAfterMinMonth() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+        val minMonth = startMonth.plusMonths(-3)
+        val maxMonth = startMonth.plusMonths(5)
+
+        createCalendar(
+            modifier = Modifier.fillMaxWidth(),
+            initialMonth = startMonth,
+            startOfWeek = startDayOfWeek,
+            initialMinMonth = minMonth,
+            initialMaxMonth = maxMonth
+        )
+
+        val newMinMonth = minMonth.plusMonths(1)
+        rule.runOnUiThread {
+            scope.launch {
+                state.updateMinMonth(newMinMonth)
+            }
+        }
+        rule.waitForIdle()
+
+        assertEquals(newMinMonth, state.minMonth)
+        assertEquals(startMonth, state.settledMonth)
+    }
+
+    @Test
+    fun updateMaxMonth_selectedMonthAfterMaxMonth() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+        val minMonth = startMonth.plusMonths(-3)
+        val maxMonth = startMonth.plusMonths(5)
+
+        createCalendar(
+            modifier = Modifier.fillMaxWidth(),
+            initialMonth = startMonth,
+            startOfWeek = startDayOfWeek,
+            initialMinMonth = minMonth,
+            initialMaxMonth = maxMonth
+        )
+
+        rule.runOnUiThread {
+            scope.launch {
+                state.scrollToMonth(maxMonth)
+            }
+        }
+        rule.waitUntil { state.settledMonth == maxMonth }
+
+        val newMaxMonth = maxMonth.plusMonths(-1)
+        rule.runOnUiThread {
+            scope.launch {
+                state.updateMaxMonth(newMaxMonth)
+            }
+        }
+        rule.waitForIdle()
+
+        assertEquals(newMaxMonth, state.maxMonth)
+        assertEquals(newMaxMonth, state.settledMonth)
+    }
+
+    @Test
+    fun updateMaxMonth_selectedMonthBeforeMaxMonth() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+        val minMonth = startMonth.plusMonths(-3)
+        val maxMonth = startMonth.plusMonths(5)
+
+        createCalendar(
+            modifier = Modifier.fillMaxWidth(),
+            initialMonth = startMonth,
+            startOfWeek = startDayOfWeek,
+            initialMinMonth = minMonth,
+            initialMaxMonth = maxMonth
+        )
+
+        val newMaxMonth = maxMonth.plusMonths(-1)
+        rule.runOnUiThread {
+            scope.launch {
+                state.updateMaxMonth(newMaxMonth)
+            }
+        }
+        rule.waitForIdle()
+
+        assertEquals(newMaxMonth, state.maxMonth)
+        assertEquals(startMonth, state.settledMonth)
     }
 
     private fun SemanticsNodeInteraction.getTextLayoutResult(): TextLayoutResult {
