@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -30,35 +29,31 @@ fun Calendar(
     headerContent: (@Composable ColumnScope.() -> Unit)? = null,
     dayContent: @Composable RowScope.(Day) -> Unit
 ) {
-    LaunchedEffect(state.pagerState.settledPage, state.pagerState.isScrollInProgress) {
-        if (!state.pagerState.isScrollInProgress) {
-            val offset = state.pagerState.settledPage - 1L
-
-            state.scrollToMonth(state.settledMonth.plusMonths(offset))
-        }
-    }
-
     HorizontalPager(
         modifier = modifier,
         state = state.pagerState
     ) { page ->
-        val chunkedDates by remember(page) {
+        val days by remember(page) {
             derivedStateOf {
-                val datesForMonth = state.months[page]
+                val offset = page - state.initialPage
+                val month = state.initialMonthWithDayOfWeek.plusMonths(offset.toLong())
 
-                datesForMonth.days
-                    .map { day ->
-                        val isSelected = state.selection.selectedDays.any {
-                            day.compareTo(it) == 0
-                        }
-
-                        if (isSelected) {
-                            day.copy(isSelected = isSelected)
-                        } else {
-                            day
-                        }
+                month.days.map { day ->
+                    val isSelected = state.selection.selectedDays.any {
+                        day.compareTo(it) == 0
                     }
-                    .chunked(CalendarState.WEEK_LENGTH)
+
+                    if (isSelected) {
+                        day.copy(isSelected = true)
+                    } else {
+                        day
+                    }
+                }
+            }
+        }
+        val chunkedDates by remember {
+            derivedStateOf {
+                days.chunked(CalendarState.WEEK_LENGTH)
             }
         }
 

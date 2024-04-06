@@ -5,6 +5,7 @@ import com.github.primodev23.calendar.CalendarState
 import java.io.Serializable
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 @Immutable
 data class Month internal constructor(
@@ -55,5 +56,9 @@ data class Month internal constructor(
                 startOfWeek = startOfWeek
             )
         }
+    }
+
+    fun getMonthsBetween(end: Month): Int {
+        return ChronoUnit.MONTHS.between(this.startDate, end.startDate).toInt()
     }
 }

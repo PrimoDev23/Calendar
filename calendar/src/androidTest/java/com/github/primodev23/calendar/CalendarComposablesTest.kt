@@ -2,14 +2,13 @@ package com.github.primodev23.calendar
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performSemanticsAction
 import androidx.compose.ui.test.performTouchInput
-import androidx.compose.ui.test.swipeLeft
-import androidx.compose.ui.test.swipeRight
 import androidx.compose.ui.text.TextLayoutResult
 import com.github.primodev23.calendar.models.Day
 import com.github.primodev23.calendar.models.Month
@@ -17,7 +16,6 @@ import com.github.primodev23.calendar.models.Selection
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.DayOfWeek
@@ -41,7 +39,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             startOfWeek = startDayOfWeek
         )
 
-        val nextMonth = state.months[2]
+        val nextMonth = state.settledMonth.plusMonths(1)
 
         assertEquals(startMonth, state.settledMonth)
         assertEquals(startMonth, state.targetMonth)
@@ -80,7 +78,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             startOfWeek = startDayOfWeek
         )
 
-        val previousMonth = state.months[0]
+        val previousMonth = state.settledMonth.plusMonths(-1)
 
         assertEquals(startMonth, state.settledMonth)
         assertEquals(startMonth, state.targetMonth)
@@ -360,39 +358,71 @@ class CalendarComposablesTest : BaseCalendarTest() {
             startOfWeek = startDayOfWeek
         )
 
-        val nextMonth = state.months.last()
+        val nextMonth = state.settledMonth.plusMonths(1)
 
         rule.mainClock.autoAdvance = false
 
         onCalendar().performTouchInput {
-            swipeLeft()
+            down(
+                Offset(
+                    x = right * 0.75f,
+                    y = centerY
+                )
+            )
+            moveBy(
+                Offset(
+                    x = -right * 0.6f,
+                    y = 0f
+                )
+            )
         }
-        rule.mainClock.advanceTimeByFrame()
 
         assertEquals(startMonth, state.settledMonth)
         assertEquals(nextMonth, state.targetMonth)
         assertTrue(state.pagerState.isScrollInProgress)
-
-        rule.mainClock.advanceTimeUntil(timeoutMillis = 5_000L) { state.settledMonth == nextMonth }
-
-        assertEquals(nextMonth, state.settledMonth)
-        assertEquals(nextMonth, state.targetMonth)
-        assertFalse(state.pagerState.isScrollInProgress)
 
         onCalendar().performTouchInput {
-            swipeRight()
+            up()
         }
-        rule.mainClock.advanceTimeByFrame()
+
+        rule.mainClock.advanceTimeUntil(timeoutMillis = 5_000L) {
+            state.settledMonth == nextMonth
+                    && !state.pagerState.isScrollInProgress
+        }
+
+        assertEquals(nextMonth, state.settledMonth)
+        assertEquals(nextMonth, state.targetMonth)
+
+        onCalendar().performTouchInput {
+            down(
+                Offset(
+                    x = right * 0.25f,
+                    y = centerY
+                )
+            )
+            moveBy(
+                Offset(
+                    x = right * 0.6f,
+                    y = 0f
+                )
+            )
+        }
 
         assertEquals(nextMonth, state.settledMonth)
         assertEquals(startMonth, state.targetMonth)
         assertTrue(state.pagerState.isScrollInProgress)
 
-        rule.mainClock.advanceTimeUntil(timeoutMillis = 5_000L) { state.settledMonth == startMonth }
+        onCalendar().performTouchInput {
+            up()
+        }
+
+        rule.mainClock.advanceTimeUntil(timeoutMillis = 5_000L) {
+            state.settledMonth == startMonth
+                    && !state.pagerState.isScrollInProgress
+        }
 
         assertEquals(startMonth, state.settledMonth)
         assertEquals(startMonth, state.targetMonth)
-        assertFalse(state.pagerState.isScrollInProgress)
     }
 
     @Test
