@@ -54,7 +54,7 @@ publishing {
         register<MavenPublication>("release") {
             groupId = "com.github.primodev23"
             artifactId = "calendar"
-            version = "1.2.1"
+            version = "2.0.0"
 
             afterEvaluate {
                 from(components["release"])
