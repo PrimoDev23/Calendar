@@ -444,23 +444,31 @@ class CalendarComposablesTest : BaseCalendarTest() {
                 )
             )
         )
+        val minMonth = startMonth.plusMonths(-3)
+        val maxMonth = startMonth.plusMonths(5)
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
             initialMonth = startMonth,
             startOfWeek = startDayOfWeek,
-            initialSelection = selection
+            initialSelection = selection,
+            initialMinMonth = minMonth,
+            initialMaxMonth = maxMonth
         )
 
         assertEquals(startMonth, state.settledMonth)
         assertEquals(startDayOfWeek, state.startOfWeek)
         assertEquals(selection, state.selection)
+        assertEquals(minMonth, state.minMonth)
+        assertEquals(maxMonth, state.maxMonth)
 
         restorationTester.emulateSavedInstanceStateRestore()
 
         assertEquals(startMonth, state.settledMonth)
         assertEquals(startDayOfWeek, state.startOfWeek)
         assertEquals(selection, state.selection)
+        assertEquals(minMonth, state.minMonth)
+        assertEquals(maxMonth, state.maxMonth)
     }
 
     private fun SemanticsNodeInteraction.getTextLayoutResult(): TextLayoutResult {

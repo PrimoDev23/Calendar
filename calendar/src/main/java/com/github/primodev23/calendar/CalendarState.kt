@@ -158,14 +158,18 @@ class CalendarState(
                 listOf(
                     it.settledMonth,
                     it.selection,
-                    it.startOfWeek
+                    it.startOfWeek,
+                    it.minMonth,
+                    it.maxMonth
                 )
             },
             restore = {
                 CalendarState(
                     initialMonth = it[0] as Month,
                     initialSelection = it[1] as Selection,
-                    initialStartOfWeek = it[2] as DayOfWeek
+                    initialStartOfWeek = it[2] as DayOfWeek,
+                    initialMinMonth = it[3] as Month,
+                    initialMaxMonth = it[4] as Month
                 )
             }
         )

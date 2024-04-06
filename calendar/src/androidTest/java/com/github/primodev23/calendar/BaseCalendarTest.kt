@@ -31,14 +31,18 @@ abstract class BaseCalendarTest {
         modifier: Modifier = Modifier,
         initialMonth: Month = Month(date = LocalDate.now()),
         initialSelection: Selection = Selection(),
-        startOfWeek: DayOfWeek = DayOfWeek.MONDAY
+        startOfWeek: DayOfWeek = DayOfWeek.MONDAY,
+        initialMinMonth: Month = initialMonth.plusMonths(-10),
+        initialMaxMonth: Month = initialMonth.plusMonths(10),
     ) {
         restorationTester.setContent {
             scope = rememberCoroutineScope()
             state = rememberCalendarState(
                 initialMonth = initialMonth,
                 initialSelection = initialSelection,
-                startOfWeek = startOfWeek
+                startOfWeek = startOfWeek,
+                initialMinMonth = initialMinMonth,
+                initialMaxMonth = initialMaxMonth
             )
             colorScheme = MaterialTheme.colorScheme
 
