@@ -20,8 +20,8 @@ class CalendarState(
     initialMonth: Month,
     initialSelection: Selection,
     initialStartOfWeek: DayOfWeek,
-    initialMinMonth: Month = initialMonth.plusMonths(-DEFAULT_MONTH_LIMIT),
-    initialMaxMonth: Month = initialMonth.plusMonths(DEFAULT_MONTH_LIMIT)
+    initialMinMonth: Month,
+    initialMaxMonth: Month
 ) {
     init {
         assert(initialMinMonth.startDate <= initialMaxMonth.startDate) {
