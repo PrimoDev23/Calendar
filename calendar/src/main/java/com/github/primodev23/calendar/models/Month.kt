@@ -47,12 +47,23 @@ data class Month internal constructor(
         return range.toList()
     }
 
-    fun plusMonths(monthsToAdd: Long): Month {
+    operator fun plus(monthsToAdd: Long): Month {
         return if (monthsToAdd == 0L) {
             this
         } else {
             Month(
                 date = startDate.plusMonths(monthsToAdd),
+                startOfWeek = startOfWeek
+            )
+        }
+    }
+
+    operator fun minus(monthsToSubtract: Long): Month {
+        return if (monthsToSubtract == 0L) {
+            this
+        } else {
+            Month(
+                date = startDate.minusMonths(monthsToSubtract),
                 startOfWeek = startOfWeek
             )
         }

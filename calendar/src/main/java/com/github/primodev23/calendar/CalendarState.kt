@@ -60,11 +60,11 @@ class CalendarState(
     }
 
     val settledMonth by derivedStateOf {
-        minMonthWithDayOfWeek.plusMonths(pagerState.settledPage.toLong())
+        minMonthWithDayOfWeek + pagerState.settledPage.toLong()
     }
 
     val targetMonth by derivedStateOf {
-        minMonthWithDayOfWeek.plusMonths(pagerState.targetPage.toLong())
+        minMonthWithDayOfWeek + pagerState.targetPage.toLong()
     }
 
     val selection = initialSelection
@@ -84,13 +84,13 @@ class CalendarState(
     }
 
     suspend fun animateScrollToNextMonth() {
-        val nextMonth = settledMonth.plusMonths(1)
+        val nextMonth = settledMonth + 1
 
         animateScrollToMonth(nextMonth)
     }
 
     suspend fun animateScrollToPreviousMonth() {
-        val previousMonth = settledMonth.plusMonths(-1)
+        val previousMonth = settledMonth - 1
 
         animateScrollToMonth(previousMonth)
     }
@@ -182,8 +182,8 @@ fun rememberCalendarState(
     initialMonth: Month = Month(date = LocalDate.now()),
     initialSelection: Selection = Selection(),
     startOfWeek: DayOfWeek = DayOfWeek.MONDAY,
-    initialMinMonth: Month = initialMonth.plusMonths(-CalendarState.DEFAULT_MONTH_LIMIT),
-    initialMaxMonth: Month = initialMonth.plusMonths(CalendarState.DEFAULT_MONTH_LIMIT)
+    initialMinMonth: Month = initialMonth - CalendarState.DEFAULT_MONTH_LIMIT,
+    initialMaxMonth: Month = initialMonth + CalendarState.DEFAULT_MONTH_LIMIT
 ): CalendarState {
     return rememberSaveable(saver = CalendarState.Saver) {
         CalendarState(

@@ -37,7 +37,7 @@ fun Calendar(
     ) { page ->
         val days by remember(page) {
             derivedStateOf {
-                val month = state.minMonthWithDayOfWeek.plusMonths(page.toLong())
+                val month = state.minMonthWithDayOfWeek + page.toLong()
 
                 month.days.map { day ->
                     val isSelected = state.selection.selectedDays.any {

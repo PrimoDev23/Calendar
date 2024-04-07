@@ -38,8 +38,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
             "initialMinMonth cannot be after initialMaxMonth",
             AssertionError::class.java
         ) {
-            val minMonth = startMonth.plusMonths(-2)
-            val maxMonth = minMonth.plusMonths(-1)
+            val minMonth = startMonth - 2
+            val maxMonth = minMonth - 1
 
             CalendarState(
                 initialMonth = startMonth,
@@ -51,8 +51,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
         }
 
         assertThrows("initialMinMonth cannot be after initialMonth", AssertionError::class.java) {
-            val minMonth = startMonth.plusMonths(2)
-            val maxMonth = minMonth.plusMonths(1)
+            val minMonth = startMonth + 2
+            val maxMonth = minMonth + 1
 
             CalendarState(
                 initialMonth = startMonth,
@@ -64,8 +64,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
         }
 
         assertThrows("initialMaxMonth cannot be before initialMonth", AssertionError::class.java) {
-            val minMonth = startMonth.plusMonths(-2)
-            val maxMonth = startMonth.plusMonths(-1)
+            val minMonth = startMonth - 2
+            val maxMonth = startMonth - 1
 
             CalendarState(
                 initialMonth = startMonth,
@@ -91,7 +91,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             startOfWeek = startDayOfWeek
         )
 
-        val nextMonth = state.settledMonth.plusMonths(1)
+        val nextMonth = state.settledMonth + 1
 
         assertEquals(startMonth, state.settledMonth)
         assertEquals(startMonth, state.targetMonth)
@@ -130,7 +130,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             startOfWeek = startDayOfWeek
         )
 
-        val previousMonth = state.settledMonth.plusMonths(-1)
+        val previousMonth = state.settledMonth - 1
 
         assertEquals(startMonth, state.settledMonth)
         assertEquals(startMonth, state.targetMonth)
@@ -162,11 +162,11 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val minMonth = startMonth.plusMonths(-5)
-        val outOfBoundsMin = minMonth.plusMonths(-1)
+        val minMonth = startMonth - 5
+        val outOfBoundsMin = minMonth - 1
 
-        val maxMonth = startMonth.plusMonths(5)
-        val outOfBoundsMax = maxMonth.plusMonths(1)
+        val maxMonth = startMonth + 5
+        val outOfBoundsMax = maxMonth + 1
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -440,7 +440,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             startOfWeek = startDayOfWeek
         )
 
-        val nextMonth = state.settledMonth.plusMonths(1)
+        val nextMonth = state.settledMonth + 1
 
         rule.mainClock.autoAdvance = false
 
@@ -526,8 +526,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
                 )
             )
         )
-        val minMonth = startMonth.plusMonths(-3)
-        val maxMonth = startMonth.plusMonths(5)
+        val minMonth = startMonth - 3
+        val maxMonth = startMonth + 5
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -560,8 +560,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val minMonth = startMonth.plusMonths(-3)
-        val maxMonth = startMonth.plusMonths(5)
+        val minMonth = startMonth - 3
+        val maxMonth = startMonth + 5
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -584,8 +584,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val minMonth = startMonth.plusMonths(-3)
-        val maxMonth = startMonth.plusMonths(5)
+        val minMonth = startMonth - 3
+        val maxMonth = startMonth + 5
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -602,7 +602,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
         }
         rule.waitUntil { state.settledMonth == minMonth }
 
-        val newMinMonth = minMonth.plusMonths(1)
+        val newMinMonth = minMonth + 1
         rule.runOnUiThread {
             scope.launch {
                 state.updateMinMonth(newMinMonth)
@@ -621,8 +621,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val minMonth = startMonth.plusMonths(-3)
-        val maxMonth = startMonth.plusMonths(5)
+        val minMonth = startMonth - 3
+        val maxMonth = startMonth + 5
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -632,7 +632,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             initialMaxMonth = maxMonth
         )
 
-        val newMinMonth = minMonth.plusMonths(1)
+        val newMinMonth = minMonth + 1
         rule.runOnUiThread {
             scope.launch {
                 state.updateMinMonth(newMinMonth)
@@ -651,8 +651,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val minMonth = startMonth.plusMonths(-3)
-        val maxMonth = startMonth.plusMonths(5)
+        val minMonth = startMonth - 3
+        val maxMonth = startMonth + 5
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -669,7 +669,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
         }
         rule.waitUntil { state.settledMonth == maxMonth }
 
-        val newMaxMonth = maxMonth.plusMonths(-1)
+        val newMaxMonth = maxMonth - 1
         rule.runOnUiThread {
             scope.launch {
                 state.updateMaxMonth(newMaxMonth)
@@ -688,8 +688,8 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val minMonth = startMonth.plusMonths(-3)
-        val maxMonth = startMonth.plusMonths(5)
+        val minMonth = startMonth - 3
+        val maxMonth = startMonth + 5
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -699,7 +699,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             initialMaxMonth = maxMonth
         )
 
-        val newMaxMonth = maxMonth.plusMonths(-1)
+        val newMaxMonth = maxMonth - 1
         rule.runOnUiThread {
             scope.launch {
                 state.updateMaxMonth(newMaxMonth)
@@ -725,7 +725,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             startOfWeek = startDayOfWeek
         )
 
-        val nextMonth = startMonth.plusMonths(2)
+        val nextMonth = startMonth + 2
 
         rule.mainClock.autoAdvance = false
 
@@ -752,11 +752,11 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val minMonth = startMonth.plusMonths(-5)
-        val outOfBoundsMin = minMonth.plusMonths(-1)
+        val minMonth = startMonth - 5
+        val outOfBoundsMin = minMonth - 1
 
-        val maxMonth = startMonth.plusMonths(5)
-        val outOfBoundsMax = maxMonth.plusMonths(1)
+        val maxMonth = startMonth + 5
+        val outOfBoundsMax = maxMonth + 1
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),

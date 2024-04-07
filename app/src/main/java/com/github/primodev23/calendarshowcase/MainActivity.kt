@@ -270,7 +270,7 @@ fun CalendarContent(
                     modifier = Modifier.weight(1f),
                     onClick = {
                         scope.launch {
-                            state.updateMinMonth(state.minMonth.plusMonths(-1))
+                            state.updateMinMonth(state.minMonth - 1)
                         }
                     }
                 ) {
@@ -281,7 +281,7 @@ fun CalendarContent(
                     modifier = Modifier.weight(1f),
                     onClick = {
                         scope.launch {
-                            state.updateMaxMonth(state.maxMonth.plusMonths(-1))
+                            state.updateMaxMonth(state.maxMonth - 1)
                         }
                     }
                 ) {
@@ -297,7 +297,7 @@ fun CalendarContent(
                     modifier = Modifier.weight(1f),
                     onClick = {
                         scope.launch {
-                            state.updateMinMonth(state.minMonth.plusMonths(1))
+                            state.updateMinMonth(state.minMonth + 1)
                         }
                     }
                 ) {
@@ -308,7 +308,7 @@ fun CalendarContent(
                     modifier = Modifier.weight(1f),
                     onClick = {
                         scope.launch {
-                            state.updateMaxMonth(state.maxMonth.plusMonths(1))
+                            state.updateMaxMonth(state.maxMonth + 1)
                         }
                     }
                 ) {

@@ -36,8 +36,8 @@ abstract class BaseCalendarTest {
         initialMonth: Month = Month(date = LocalDate.now()),
         initialSelection: Selection = Selection(),
         startOfWeek: DayOfWeek = DayOfWeek.MONDAY,
-        initialMinMonth: Month = initialMonth.plusMonths(-10),
-        initialMaxMonth: Month = initialMonth.plusMonths(10),
+        initialMinMonth: Month = initialMonth - 10,
+        initialMaxMonth: Month = initialMonth + 10,
     ) {
         restorationTester.setContent {
             scope = rememberCoroutineScope()
