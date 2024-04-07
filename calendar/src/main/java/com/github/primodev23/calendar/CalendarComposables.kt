@@ -26,12 +26,14 @@ fun Calendar(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.SpaceBetween,
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     contentPadding: PaddingValues = PaddingValues(0.dp),
+    userScrollEnabled: Boolean = true,
     headerContent: (@Composable ColumnScope.() -> Unit)? = null,
     dayContent: @Composable RowScope.(Day) -> Unit
 ) {
     HorizontalPager(
         modifier = modifier,
-        state = state.pagerState
+        state = state.pagerState,
+        userScrollEnabled = userScrollEnabled
     ) { page ->
         val days by remember(page) {
             derivedStateOf {
