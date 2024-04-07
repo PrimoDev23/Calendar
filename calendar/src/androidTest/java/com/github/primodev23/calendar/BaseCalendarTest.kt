@@ -11,7 +11,11 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import com.github.primodev23.calendar.models.Month
 import com.github.primodev23.calendar.models.Selection
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import java.time.DayOfWeek
 import java.time.LocalDate
@@ -55,6 +59,25 @@ abstract class BaseCalendarTest {
 
     fun onCalendar(): SemanticsNodeInteraction {
         return rule.onNodeWithTag(CalendarTestTag)
+    }
+
+    inline fun <reified T : Throwable> assertThrows(
+        expectedThrowable: T,
+        crossinline block: suspend () -> Unit
+    ) {
+        var exception: Throwable? = null
+        val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+            exception = throwable
+        }
+
+        rule.runOnUiThread {
+            scope.launch(exceptionHandler) {
+                block()
+            }
+        }
+
+        assertTrue(exception is T)
+        assertEquals(expectedThrowable.message, exception?.message)
     }
 }
 

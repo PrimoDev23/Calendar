@@ -16,6 +16,7 @@ import com.github.primodev23.calendar.models.Selection
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import java.time.DayOfWeek
@@ -24,6 +25,57 @@ import java.time.LocalDate
 class CalendarComposablesTest : BaseCalendarTest() {
 
     private val startMonth = LocalDate.of(2024, 3, 1)
+
+    @Test
+    fun init_validation() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+
+        assertThrows(
+            "initialMinMonth cannot be after initialMaxMonth",
+            AssertionError::class.java
+        ) {
+            val minMonth = startMonth.plusMonths(-2)
+            val maxMonth = minMonth.plusMonths(-1)
+
+            CalendarState(
+                initialMonth = startMonth,
+                initialSelection = Selection(),
+                initialStartOfWeek = startDayOfWeek,
+                initialMinMonth = minMonth,
+                initialMaxMonth = maxMonth
+            )
+        }
+
+        assertThrows("initialMinMonth cannot be after initialMonth", AssertionError::class.java) {
+            val minMonth = startMonth.plusMonths(2)
+            val maxMonth = minMonth.plusMonths(1)
+
+            CalendarState(
+                initialMonth = startMonth,
+                initialSelection = Selection(),
+                initialStartOfWeek = startDayOfWeek,
+                initialMinMonth = minMonth,
+                initialMaxMonth = maxMonth
+            )
+        }
+
+        assertThrows("initialMaxMonth cannot be before initialMonth", AssertionError::class.java) {
+            val minMonth = startMonth.plusMonths(-2)
+            val maxMonth = startMonth.plusMonths(-1)
+
+            CalendarState(
+                initialMonth = startMonth,
+                initialSelection = Selection(),
+                initialStartOfWeek = startDayOfWeek,
+                initialMinMonth = minMonth,
+                initialMaxMonth = maxMonth
+            )
+        }
+    }
 
     @Test
     fun animateScrollToNextMonth() {
@@ -101,6 +153,36 @@ class CalendarComposablesTest : BaseCalendarTest() {
 
         assertEquals(previousMonth, state.settledMonth)
         assertEquals(previousMonth, state.targetMonth)
+    }
+
+    @Test
+    fun scrollToMonth_validateBounds() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+        val minMonth = startMonth.plusMonths(-5)
+        val outOfBoundsMin = minMonth.plusMonths(-1)
+
+        val maxMonth = startMonth.plusMonths(5)
+        val outOfBoundsMax = maxMonth.plusMonths(1)
+
+        createCalendar(
+            modifier = Modifier.fillMaxWidth(),
+            initialMonth = startMonth,
+            startOfWeek = startDayOfWeek,
+            initialMinMonth = minMonth,
+            initialMaxMonth = maxMonth
+        )
+
+        assertThrows(AssertionError("month cannot be before the set minimum month")) {
+            state.scrollToMonth(outOfBoundsMin)
+        }
+
+        assertThrows(AssertionError("month cannot be after the set maximum month")) {
+            state.scrollToMonth(outOfBoundsMax)
+        }
     }
 
     @Test
@@ -627,6 +709,70 @@ class CalendarComposablesTest : BaseCalendarTest() {
 
         assertEquals(newMaxMonth, state.maxMonth)
         assertEquals(startMonth, state.settledMonth)
+    }
+
+    @Test
+    fun animateScrollToMonth() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+
+        createCalendar(
+            modifier = Modifier.fillMaxWidth(),
+            initialMonth = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+
+        val nextMonth = startMonth.plusMonths(2)
+
+        rule.mainClock.autoAdvance = false
+
+        rule.runOnUiThread {
+            scope.launch {
+                state.animateScrollToMonth(nextMonth)
+            }
+        }
+        rule.mainClock.advanceTimeByFrame()
+
+        assertEquals(nextMonth, state.targetMonth)
+        assertEquals(startMonth, state.settledMonth)
+
+        rule.mainClock.advanceTimeBy(1_000)
+
+        assertEquals(nextMonth, state.targetMonth)
+        assertEquals(nextMonth, state.settledMonth)
+    }
+
+    @Test
+    fun animateScrollToMonth_validateBounds() {
+        val startDayOfWeek = DayOfWeek.MONDAY
+        val startMonth = Month(
+            date = startMonth,
+            startOfWeek = startDayOfWeek
+        )
+        val minMonth = startMonth.plusMonths(-5)
+        val outOfBoundsMin = minMonth.plusMonths(-1)
+
+        val maxMonth = startMonth.plusMonths(5)
+        val outOfBoundsMax = maxMonth.plusMonths(1)
+
+        createCalendar(
+            modifier = Modifier.fillMaxWidth(),
+            initialMonth = startMonth,
+            startOfWeek = startDayOfWeek,
+            initialMinMonth = minMonth,
+            initialMaxMonth = maxMonth
+        )
+
+        assertThrows(AssertionError("month cannot be before the set minimum month")) {
+            state.animateScrollToMonth(outOfBoundsMin)
+        }
+
+        assertThrows(AssertionError("month cannot be after the set maximum month")) {
+            state.animateScrollToMonth(outOfBoundsMax)
+        }
     }
 
     private fun SemanticsNodeInteraction.getTextLayoutResult(): TextLayoutResult {
