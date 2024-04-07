@@ -45,4 +45,20 @@ class MonthTest {
         assertEquals(month.startDate, LocalDate.of(2024, 4, 1))
     }
 
+    @Test
+    fun plus() {
+        val month = Month(date = LocalDate.of(2024, 3, 1))
+        val nextMonth = month + 1
+
+        assertEquals(LocalDate.of(2024, 4, 1), nextMonth.startDate)
+    }
+
+    @Test
+    fun minus() {
+        val month = Month(date = LocalDate.of(2024, 3, 1))
+        val nextMonth = month - 1
+
+        assertEquals(LocalDate.of(2024, 2, 1), nextMonth.startDate)
+    }
+
 }
