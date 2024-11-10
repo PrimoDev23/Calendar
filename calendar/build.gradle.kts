@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.github.primodev23.calendar"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 29
@@ -39,7 +39,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     publishing {
