@@ -34,7 +34,7 @@ class DayProgressionIterator(
             }
             hasNext = false
         } else {
-            next += 1L
+            next += 1
         }
 
         return value

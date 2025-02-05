@@ -1,13 +1,17 @@
 package com.github.primodev23.calendar.models
 
 import androidx.compose.runtime.Immutable
-import java.time.LocalDate
+import kotlinx.datetime.DatePeriod
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 
 @Immutable
 data class Day(
     val date: LocalDate,
     val month: Month? = null,
-    val isSelected: Boolean = false
+    val isSelected: Boolean = false,
 ) : Comparable<Day> {
 
     val isInSelectedMonth: Boolean
@@ -16,7 +20,7 @@ data class Day(
                 return false
             }
 
-            return date.monthValue == month.startDate.monthValue &&
+            return date.month == month.startDate.month &&
                     date.year == month.startDate.year
         }
 
@@ -24,8 +28,11 @@ data class Day(
         return date.compareTo(other.date)
     }
 
-    operator fun plus(daysToAdd: Long): Day {
-        val newDate = date.plusDays(daysToAdd)
+    operator fun plus(daysToAdd: Int): Day {
+        val newDate = date.plus(
+            value = daysToAdd,
+            unit = DateTimeUnit.DAY
+        )
 
         return Day(
             date = newDate,
@@ -33,8 +40,11 @@ data class Day(
         )
     }
 
-    operator fun minus(daysToSubtract: Long): Day {
-        val newDate = date.minusDays(daysToSubtract)
+    operator fun minus(daysToSubtract: Int): Day {
+        val newDate = date.minus(
+            value = daysToSubtract,
+            unit = DateTimeUnit.DAY
+        )
 
         return Day(
             date = newDate,

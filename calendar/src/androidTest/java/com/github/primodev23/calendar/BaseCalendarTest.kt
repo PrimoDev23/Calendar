@@ -14,11 +14,13 @@ import com.github.primodev23.calendar.models.Selection
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Rule
-import java.time.DayOfWeek
-import java.time.LocalDate
 
 abstract class BaseCalendarTest {
 
@@ -33,7 +35,9 @@ abstract class BaseCalendarTest {
 
     fun createCalendar(
         modifier: Modifier = Modifier,
-        initialMonth: Month = Month(date = LocalDate.now()),
+        initialMonth: Month = Month(
+            date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        ),
         initialSelection: Selection = Selection(),
         startOfWeek: DayOfWeek = DayOfWeek.MONDAY,
         initialMinMonth: Month = initialMonth - 10,
@@ -63,7 +67,7 @@ abstract class BaseCalendarTest {
 
     inline fun <reified T : Throwable> assertThrows(
         expectedThrowable: T,
-        crossinline block: suspend () -> Unit
+        crossinline block: suspend () -> Unit,
     ) {
         var exception: Throwable? = null
         val exceptionHandler = CoroutineExceptionHandler { _, throwable ->

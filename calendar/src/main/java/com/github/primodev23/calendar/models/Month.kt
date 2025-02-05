@@ -2,15 +2,18 @@ package com.github.primodev23.calendar.models
 
 import androidx.compose.runtime.Immutable
 import com.github.primodev23.calendar.CalendarState
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.minus
+import kotlinx.datetime.monthsUntil
+import kotlinx.datetime.plus
 import java.io.Serializable
-import java.time.DayOfWeek
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 @Immutable
 data class Month internal constructor(
     private val date: LocalDate,
-    private val startOfWeek: DayOfWeek
+    private val startOfWeek: DayOfWeek,
 ) : Serializable {
 
     constructor(date: LocalDate) : this(
@@ -26,20 +29,23 @@ data class Month internal constructor(
         val dayOfWeekFirst = startDate.dayOfWeek
         val startOffset =
             (CalendarState.WEEK_LENGTH - startOfWeek.value + dayOfWeekFirst.value) % CalendarState.WEEK_LENGTH
-        val rangeStartDate = startDate.plusDays(-startOffset.toLong())
+        val rangeStartDate = startDate.minus(
+            value = startOffset,
+            unit = DateTimeUnit.DAY
+        )
         val start = Day(
             date = rangeStartDate,
             month = this@Month
         )
 
-        val monthLength = startDate.lengthOfMonth()
+        val monthLength = startDate.month.length(startDate.isLeapYear)
         val modDaysUntilEnd = (startOffset + monthLength) % CalendarState.WEEK_LENGTH
         val endOffset = if (modDaysUntilEnd == 0) {
             0
         } else {
             CalendarState.WEEK_LENGTH - modDaysUntilEnd
         }
-        val fullMonthLength = startOffset + monthLength + endOffset - 1L
+        val fullMonthLength = startOffset + monthLength + endOffset - 1
         val end = start + fullMonthLength
 
         val range = start..end
@@ -52,7 +58,7 @@ data class Month internal constructor(
             this
         } else {
             Month(
-                date = startDate.plusMonths(monthsToAdd),
+                date = startDate.plus(monthsToAdd, DateTimeUnit.MONTH),
                 startOfWeek = startOfWeek
             )
         }
@@ -63,7 +69,10 @@ data class Month internal constructor(
             this
         } else {
             Month(
-                date = startDate.minusMonths(monthsToSubtract),
+                date = startDate.minus(
+                    value = monthsToSubtract,
+                    unit = DateTimeUnit.MONTH
+                ),
                 startOfWeek = startOfWeek
             )
         }
@@ -71,9 +80,9 @@ data class Month internal constructor(
 
     fun getMonthsBetween(
         end: Month,
-        endInclusive: Boolean = false
+        endInclusive: Boolean = false,
     ): Int {
-        val duration = ChronoUnit.MONTHS.between(this.startDate, end.startDate).toInt()
+        val duration = startDate.monthsUntil(end.startDate)
 
         return if (endInclusive) {
             duration + 1

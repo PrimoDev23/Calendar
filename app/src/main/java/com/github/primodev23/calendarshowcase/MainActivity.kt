@@ -52,8 +52,13 @@ import com.github.primodev23.calendar.models.Month
 import com.github.primodev23.calendar.rememberCalendarState
 import com.github.primodev23.calendarshowcase.ui.theme.CalendarShowcaseTheme
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
-import java.time.LocalDate
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 import java.time.format.TextStyle
 import java.util.Collections
 import java.util.Locale
@@ -83,13 +88,26 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun CalendarContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
         val scope = rememberCoroutineScope()
+        val now = remember {
+            Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+        }
         val state = rememberCalendarState(
-            initialMinMonth = Month(date = LocalDate.now().minusMonths(1)),
-            initialMaxMonth = Month(date = LocalDate.now().plusMonths(1))
+            initialMinMonth = Month(
+                date = now.minus(
+                    value = 1,
+                    unit = DateTimeUnit.MONTH
+                )
+            ),
+            initialMaxMonth = Month(
+                date = now.plus(
+                    value = 1,
+                    unit = DateTimeUnit.MONTH
+                )
+            )
         )
 
         Row(
@@ -324,7 +342,7 @@ fun RadioButton(
     text: String,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -358,7 +376,7 @@ private fun CalendarContentPreview() {
 fun Day(
     date: Day,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Card(
         modifier = modifier,

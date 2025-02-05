@@ -1,17 +1,17 @@
 package com.github.primodev23.calendar.models
 
+import kotlinx.datetime.LocalDate
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.LocalDate
 
 class SelectionTest {
 
     @Test
     fun initialSelection() {
         val days = listOf(
-            Day(date = LocalDate.of(2024, 4, 4)),
-            Day(date = LocalDate.of(2024, 4, 7))
+            Day(date = LocalDate(2024, 4, 4)),
+            Day(date = LocalDate(2024, 4, 7))
         )
         val selection = Selection(days)
 
@@ -22,7 +22,7 @@ class SelectionTest {
 
     @Test
     fun contains() {
-        val day = Day(date = LocalDate.of(2024, 4, 7))
+        val day = Day(date = LocalDate(2024, 4, 7))
         val selection = Selection()
 
         selection.selectedDays.add(day)
@@ -38,7 +38,7 @@ class SelectionTest {
     fun add() {
         val selection = Selection()
 
-        val day = Day(date = LocalDate.of(2024, 4, 7))
+        val day = Day(date = LocalDate(2024, 4, 7))
 
         selection.add(day)
 
@@ -49,7 +49,7 @@ class SelectionTest {
     fun remove() {
         val selection = Selection()
 
-        val day = Day(date = LocalDate.of(2024, 4, 7))
+        val day = Day(date = LocalDate(2024, 4, 7))
 
         selection.selectedDays.add(day)
         selection.remove(day)
@@ -62,8 +62,8 @@ class SelectionTest {
         val selection = Selection()
 
         val days = listOf(
-            Day(date = LocalDate.of(2024, 4, 4)),
-            Day(date = LocalDate.of(2024, 4, 7))
+            Day(date = LocalDate(2024, 4, 4)),
+            Day(date = LocalDate(2024, 4, 7))
         )
 
         selection.addAll(days)
@@ -78,8 +78,8 @@ class SelectionTest {
         val selection = Selection()
 
         val days = listOf(
-            Day(date = LocalDate.of(2024, 4, 4)),
-            Day(date = LocalDate.of(2024, 4, 7))
+            Day(date = LocalDate(2024, 4, 4)),
+            Day(date = LocalDate(2024, 4, 7))
         )
 
         selection.selectedDays.addAll(days)

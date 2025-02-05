@@ -11,8 +11,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import com.github.primodev23.calendar.models.Month
 import com.github.primodev23.calendar.models.Selection
-import java.time.DayOfWeek
-import java.time.LocalDate
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Suppress("unused", "MemberVisibilityCanBePrivate")
 @Stable
@@ -21,7 +24,7 @@ class CalendarState(
     initialSelection: Selection,
     initialStartOfWeek: DayOfWeek,
     initialMinMonth: Month,
-    initialMaxMonth: Month
+    initialMaxMonth: Month,
 ) {
     init {
         assert(initialMinMonth.startDate <= initialMaxMonth.startDate) {
@@ -142,7 +145,7 @@ class CalendarState(
 
     private fun getPageForMonth(
         month: Month,
-        minMonth: Month = this.minMonth
+        minMonth: Month = this.minMonth,
     ): Int {
         return minMonth.getMonthsBetween(month)
     }
@@ -179,11 +182,13 @@ class CalendarState(
 
 @Composable
 fun rememberCalendarState(
-    initialMonth: Month = Month(date = LocalDate.now()),
+    initialMonth: Month = Month(
+        date = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date
+    ),
     initialSelection: Selection = Selection(),
     startOfWeek: DayOfWeek = DayOfWeek.MONDAY,
     initialMinMonth: Month = initialMonth - CalendarState.DEFAULT_MONTH_LIMIT,
-    initialMaxMonth: Month = initialMonth + CalendarState.DEFAULT_MONTH_LIMIT
+    initialMaxMonth: Month = initialMonth + CalendarState.DEFAULT_MONTH_LIMIT,
 ): CalendarState {
     return rememberSaveable(saver = CalendarState.Saver) {
         CalendarState(

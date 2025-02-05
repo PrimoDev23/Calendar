@@ -15,16 +15,18 @@ import com.github.primodev23.calendar.models.Month
 import com.github.primodev23.calendar.models.Selection
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.plus
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.time.DayOfWeek
-import java.time.LocalDate
 
 class CalendarComposablesTest : BaseCalendarTest() {
 
-    private val startMonth = LocalDate.of(2024, 3, 1)
+    private val startMonth = LocalDate(2024, 3, 1)
 
     @Test
     fun init_validation() {
@@ -192,7 +194,7 @@ class CalendarComposablesTest : BaseCalendarTest() {
             date = startMonth,
             startOfWeek = startDayOfWeek
         )
-        val newMonth = Month(date = LocalDate.of(2024, 12, 1))
+        val newMonth = Month(date = LocalDate(2024, 12, 1))
 
         createCalendar(
             modifier = Modifier.fillMaxWidth(),
@@ -255,7 +257,10 @@ class CalendarComposablesTest : BaseCalendarTest() {
         )
 
         val selectedDay = Day(
-            date = this.startMonth.plusDays(5),
+            date = this.startMonth.plus(
+                value = 5,
+                unit = DateTimeUnit.DAY
+            ),
             month = startMonth
         )
 
@@ -307,7 +312,10 @@ class CalendarComposablesTest : BaseCalendarTest() {
         )
 
         val selectedDay = Day(
-            date = this.startMonth.plusDays(5),
+            date = this.startMonth.plus(
+                value = 5,
+                unit = DateTimeUnit.DAY
+            ),
             month = startMonth
         )
 
@@ -338,7 +346,10 @@ class CalendarComposablesTest : BaseCalendarTest() {
         )
 
         val selectedDay = Day(
-            date = this.startMonth.plusDays(5),
+            date = this.startMonth.plus(
+                value = 5,
+                unit = DateTimeUnit.DAY
+            ),
             month = startMonth
         )
 
@@ -367,11 +378,17 @@ class CalendarComposablesTest : BaseCalendarTest() {
 
         val selectedDays = listOf(
             Day(
-                date = this.startMonth.plusDays(5),
+                date = this.startMonth.plus(
+                    value = 5,
+                    unit = DateTimeUnit.DAY
+                ),
                 month = startMonth
             ),
             Day(
-                date = this.startMonth.plusDays(9),
+                date = this.startMonth.plus(
+                    value = 9,
+                    unit = DateTimeUnit.DAY
+                ),
                 month = startMonth
             )
         )
@@ -403,11 +420,17 @@ class CalendarComposablesTest : BaseCalendarTest() {
             initialSelection = Selection(
                 listOf(
                     Day(
-                        date = this.startMonth.plusDays(5),
+                        date = this.startMonth.plus(
+                            value = 5,
+                            unit = DateTimeUnit.DAY
+                        ),
                         month = startMonth
                     ),
                     Day(
-                        date = this.startMonth.plusDays(9),
+                        date = this.startMonth.plus(
+                            value = 9,
+                            unit = DateTimeUnit.DAY
+                        ),
                         month = startMonth
                     )
                 )
@@ -517,11 +540,17 @@ class CalendarComposablesTest : BaseCalendarTest() {
         val selection = Selection(
             listOf(
                 Day(
-                    date = this.startMonth.plusDays(5),
+                    date = this.startMonth.plus(
+                        value = 5,
+                        unit = DateTimeUnit.DAY
+                    ),
                     month = startMonth
                 ),
                 Day(
-                    date = this.startMonth.plusDays(9),
+                    date = this.startMonth.plus(
+                        value = 9,
+                        unit = DateTimeUnit.DAY
+                    ),
                     month = startMonth
                 )
             )

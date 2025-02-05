@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
 
